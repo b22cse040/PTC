@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from pprint import pprint
 import os 
 
 load_dotenv(".env")
@@ -22,12 +23,12 @@ tool_search = ToolSearchModule(
     db_path="tools.db",
 )
 
-query = "Get me employees having salary > 30000 in engineering"
+query = "Get me employees having salary > 30000 in engineering, and also get me their attendance data."
 
 # Retrieve relevant tools + their Python callables
 search_result = tool_search.invoke(
     query=query,
-    k=3,
+    k=5,
     TOOLS=TOOLS,
 )
 
@@ -58,3 +59,6 @@ print(result.api_count)
 
 print("\nElapsed time:")
 print(result.elapsed_time)
+
+print("\n======== Messages =========")
+pprint(result.messages, indent=2, width=120)
