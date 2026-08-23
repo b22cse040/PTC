@@ -1,3 +1,5 @@
 anthropic
 rich
 dotenv
+numpy
+sentence_transformers
