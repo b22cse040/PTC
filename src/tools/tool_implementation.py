@@ -191,7 +191,7 @@ TOOLS: Dict[str, Callable] = {
     # Relevant
     "get_employees": get_employees,
     "get_employees_by_department": get_employees_by_department,
-    "filter_employees_by_salary": filter_employees_by_salary,
+    # "filter_employees_by_salary": filter_employees_by_salary,
     "get_employee_department": get_employee_department,
     "get_employee_salary": get_employee_salary,
 

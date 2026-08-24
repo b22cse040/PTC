@@ -26,35 +26,35 @@ TOOL_DEFINITIONS = [
             "department": "Engineering"
         }
     },
-    {
-        "name": "filter_employees_by_salary",
-        "description": "Return employees whose salary is greater than the specified amount.",
-        "input-schema": {
-            "type": "object",
-            "properties": {
-                "employees": {
-                    "type": "array",
-                    "description": "List of employee objects to filter."
-                },
-                "minimum_salary": {
-                    "type": "number",
-                    "description": "Minimum salary threshold. Employees must earn more than this value."
-                }
-            },
-            "required": ["employees", "minimum_salary"]
-        },
-        "input_example": {
-            "employees": [
-                {
-                    "id": 1,
-                    "name": "Alice",
-                    "department": "Engineering",
-                    "salary": 45000
-                }
-            ],
-            "minimum_salary": 30000
-        }
-    },
+    # {
+    #     "name": "filter_employees_by_salary",
+    #     "description": "Return employees whose salary is greater than the specified amount.",
+    #     "input-schema": {
+    #         "type": "object",
+    #         "properties": {
+    #             "employees": {
+    #                 "type": "array",
+    #                 "description": "List of employee objects to filter."
+    #             },
+    #             "minimum_salary": {
+    #                 "type": "number",
+    #                 "description": "Minimum salary threshold. Employees must earn more than this value."
+    #             }
+    #         },
+    #         "required": ["employees", "minimum_salary"]
+    #     },
+    #     "input_example": {
+    #         "employees": [
+    #             {
+    #                 "id": 1,
+    #                 "name": "Alice",
+    #                 "department": "Engineering",
+    #                 "salary": 45000
+    #             }
+    #         ],
+    #         "minimum_salary": 30000
+    #     }
+    # },
     {
         "name": "get_employee_department",
         "description": "Return the name and department of every employee.",
