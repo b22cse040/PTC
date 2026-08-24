@@ -1,5 +1,15 @@
 TOOL_DEFINITIONS = [
     {
+        "name": "get_employees",
+        "description": "Return the complete list of employees.",
+        "input-schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        },
+        "input_example": {}
+    },
+    {
         "name": "get_employees_by_department",
         "description": "Return employees belonging to a specified department.",
         "input-schema": {
@@ -42,28 +52,6 @@ TOOL_DEFINITIONS = [
                     "salary": 45000
                 }
             ],
-            "minimum_salary": 30000
-        }
-    },
-    {
-        "name": "search_employees",
-        "description": "Search employees using optional department and minimum salary filters.",
-        "input-schema": {
-            "type": "object",
-            "properties": {
-                "department": {
-                    "type": "string",
-                    "description": "Department to filter employees by."
-                },
-                "minimum_salary": {
-                    "type": "number",
-                    "description": "Minimum salary threshold. Employees must earn more than this value."
-                }
-            },
-            "required": []
-        },
-        "input_example": {
-            "department": "Engineering",
             "minimum_salary": 30000
         }
     },
@@ -119,7 +107,10 @@ TOOL_DEFINITIONS = [
                     "description": "Employee performance score."
                 }
             },
-            "required": ["employee_id", "performance_score"]
+            "required": [
+                "employee_id",
+                "performance_score"
+            ]
         },
         "input_example": {
             "employee_id": 1,

@@ -43,6 +43,12 @@ EMPLOYEES: List[Dict[str, Any]] = [
 # Relevant tools
 # ============================================================
 
+def get_employees() -> List[Dict[str, Any]]:
+    """Return the complete list of employees."""
+
+    return EMPLOYEES
+
+
 def get_employees_by_department(
     department: str,
 ) -> List[Dict[str, Any]]:
@@ -66,31 +72,6 @@ def filter_employees_by_salary(
         for employee in employees
         if employee["salary"] > minimum_salary
     ]
-
-
-def search_employees(
-    department: str | None = None,
-    minimum_salary: float | None = None,
-) -> List[Dict[str, Any]]:
-    """Search employees using optional department and minimum salary filters."""
-
-    employees = EMPLOYEES
-
-    if department:
-        employees = [
-            employee
-            for employee in employees
-            if employee["department"].lower() == department.lower()
-        ]
-
-    if minimum_salary is not None:
-        employees = [
-            employee
-            for employee in employees
-            if employee["salary"] > minimum_salary
-        ]
-
-    return employees
 
 
 def get_employee_department() -> List[Dict[str, str]]:
@@ -208,9 +189,9 @@ def get_employee_attendance(
 
 TOOLS: Dict[str, Callable] = {
     # Relevant
+    "get_employees": get_employees,
     "get_employees_by_department": get_employees_by_department,
     "filter_employees_by_salary": filter_employees_by_salary,
-    "search_employees": search_employees,
     "get_employee_department": get_employee_department,
     "get_employee_salary": get_employee_salary,
 
