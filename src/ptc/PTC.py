@@ -25,15 +25,17 @@ class PTCModule(ABC):
     def __init__(
             self,
             model: str,
-            max_tokens : int = 4000
+            max_tokens : int = 4000,
+            truncate_data : bool = False
         ):
         self.model = model
         self.max_tokens = max_tokens 
+        self.truncate_data: bool = truncate_data ## If true, a system prompt must be added to Indicate only peek the data.
 
     def invoke(
         self,
         user_message: str,
-        result: ToolSearchResult
+        tool_search_result: ToolSearchResult
         ) -> PTCResult:
 
         """
@@ -42,7 +44,7 @@ class PTCModule(ABC):
         Provider-specific behaviour is delegated to subclasses.
         """
 
-        tools = self._build_tools(result)
+        tools = self._build_tools(tool_search_result)
 
         messages = self._initialize_messages(
             user_message
@@ -74,7 +76,7 @@ class PTCModule(ABC):
             result_type = self._process_response(
                     response=response,
                     messages=messages,
-                    result=result,
+                    result=tool_search_result,
                     state=state,
                 )
 

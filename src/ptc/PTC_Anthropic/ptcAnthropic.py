@@ -33,12 +33,29 @@ class PTCAnthropic(PTCModule):
         user_message: str,
     ) -> List[Any]:
 
-        return [
+        messages = []
+
+        if self.truncate_data:
+            messages.append(
+                {
+                    "role": "system",
+                    "content": (
+                        "When inspecting tool results or datasets, "
+                        "only peek at the data needed to answer the "
+                        "user's query. Do not return or process the "
+                        "entire dataset unless explicitly requested."
+                    ),
+                }
+            )
+
+        messages.append(
             {
                 "role": "user",
                 "content": user_message,
             }
-        ]
+        )
+
+        return messages
 
     def _initialize_state(
         self,

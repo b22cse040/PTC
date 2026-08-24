@@ -12,6 +12,7 @@ from anthropic import Anthropic
 from src.ptc.PTC_Anthropic.ptcAnthropic import PTCAnthropic
 from src.tool_search_module.tool_search import ToolSearchModule
 from src.tools.tool_implementation import TOOLS
+from src.tools.tool_ingestion import TOOL_DEFINITIONS
 
 
 client = Anthropic()
@@ -23,14 +24,25 @@ tool_search = ToolSearchModule(
     db_path="tools.db",
 )
 
+for tool in TOOL_DEFINITIONS:
+    tool_search.add_tool(tool)
+    print(f"Added {tool["name"]} to searchDB")
+
 query = "Get me employees having salary > 30000 in engineering, and also get me their attendance data."
 
 # Retrieve relevant tools + their Python callables
 search_result = tool_search.invoke(
     query=query,
-    k=5,
+    k=8,
     TOOLS=TOOLS,
 )
+
+for i, tool in enumerate(search_result.tools):
+    print(
+        f"{i + 1}. "
+        f"{tool['name']:<35} "
+        f"{tool['score']:.4f}"
+    )
 
 print(search_result.tools_callable)
 
@@ -45,7 +57,7 @@ print("Created PTC Module")
 # Run Claude with only the retrieved tools
 result = ptc.invoke(
     user_message=query,
-    result=search_result,
+    tool_search_result=search_result,
 )
 
 print("Response:")

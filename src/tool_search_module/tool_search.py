@@ -56,9 +56,10 @@ class ToolSearchModule:
 
         self.db.commit()
 
+    
     def add_tool(self, tool: Dict[str, Any]) -> None:
         """
-        Add a tool to the database.
+        Add a tool to the database only if it does not already exist.
 
         The embedding is generated only from:
 
@@ -66,6 +67,20 @@ class ToolSearchModule:
         """
 
         name = tool["name"]
+
+        # Check whether the tool already exists.
+        existing_tool = self.db.execute(
+            """
+            SELECT id
+            FROM tools
+            WHERE name = ?
+            """,
+            (name,),
+        ).fetchone()
+
+        if existing_tool is not None:
+            return
+
         description = tool["description"]
 
         embedding_text = (
@@ -77,9 +92,9 @@ class ToolSearchModule:
             normalize_embeddings=True,
         )
 
-        self.db.execute(
+        cursor = self.db.execute(
             """
-            INSERT OR REPLACE INTO tools (
+            INSERT INTO tools (
                 name,
                 description,
                 input_schema,
@@ -95,20 +110,11 @@ class ToolSearchModule:
             ),
         )
 
-        row = self.db.execute(
-            """
-            SELECT id
-            FROM tools
-            WHERE name = ?
-            """,
-            (name,),
-        ).fetchone()
-
-        tool_id = row["id"]
+        tool_id = cursor.lastrowid
 
         self.db.execute(
             """
-            INSERT OR REPLACE INTO tool_embeddings (
+            INSERT INTO tool_embeddings (
                 tool_id,
                 embedding
             )
