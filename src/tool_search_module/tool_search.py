@@ -1,18 +1,19 @@
-# tool_search.py
-
 import json
 import sqlite3
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List
+from typing import Any, Dict, List
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
+
+from src.tools.tool_executors import TOOL_EXECUTORS
+from src.tool_search_module.tool_executor import ToolExecutor
 
 
 @dataclass
 class ToolSearchResult:
     tools: List[Dict[str, Any]]
-    tools_callable: Dict[str, Callable]
+    tool_executors: Dict[str, ToolExecutor]
 
 
 class ToolSearchModule:
@@ -36,6 +37,7 @@ class ToolSearchModule:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
                 description TEXT NOT NULL,
+                source TEXT NOT NULL,
                 input_schema TEXT NOT NULL,
                 input_example TEXT NOT NULL
             )
@@ -56,8 +58,10 @@ class ToolSearchModule:
 
         self.db.commit()
 
-    
-    def add_tool(self, tool: Dict[str, Any]) -> None:
+    def add_tool(
+        self,
+        tool: Dict[str, Any],
+    ) -> None:
         """
         Add a tool to the database only if it does not already exist.
 
@@ -68,7 +72,6 @@ class ToolSearchModule:
 
         name = tool["name"]
 
-        # Check whether the tool already exists.
         existing_tool = self.db.execute(
             """
             SELECT id
@@ -97,14 +100,16 @@ class ToolSearchModule:
             INSERT INTO tools (
                 name,
                 description,
+                source,
                 input_schema,
                 input_example
             )
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             """,
             (
                 name,
                 description,
+                tool["source"],
                 json.dumps(tool["input-schema"]),
                 json.dumps(tool["input_example"]),
             ),
@@ -151,6 +156,7 @@ class ToolSearchModule:
                 t.id,
                 t.name,
                 t.description,
+                t.source,
                 t.input_schema,
                 t.input_example,
                 e.embedding
@@ -179,6 +185,7 @@ class ToolSearchModule:
                     "tool_id": row["id"],
                     "name": row["name"],
                     "description": row["description"],
+                    "source": row["source"],
                     "input_schema": json.loads(
                         row["input_schema"]
                     ),
@@ -196,42 +203,37 @@ class ToolSearchModule:
 
         return results[:k]
 
-    def get_callable_dict(
+    def get_tool_executors(
         self,
-        TOOLS: Dict[str, Callable],
         result_search_tools: List[Dict[str, Any]],
-    ) -> Dict[str, Callable]:
+    ) -> Dict[str, ToolExecutor]:
         """
-        Build the callable dictionary for the retrieved tools.
-
-        Maps tool names from the search results to their
-        corresponding Python implementations.
+        Filter the globally maintained TOOL_EXECUTORS registry
+        using the tools returned by semantic search.
         """
 
-        tools_callable = {}
+        tool_executors: Dict[str, ToolExecutor] = {}
 
         for tool in result_search_tools:
             tool_name = tool["name"]
 
-            if tool_name not in TOOLS:
+            if tool_name not in TOOL_EXECUTORS:
                 raise KeyError(
                     f"Tool '{tool_name}' exists in the database "
-                    f"but is missing from TOOLS."
+                    f"but is missing from TOOL_EXECUTORS."
                 )
 
-            tools_callable[tool_name] = TOOLS[tool_name]
+            tool_executors[tool_name] = TOOL_EXECUTORS[tool_name]
 
-        return tools_callable
+        return tool_executors
 
     def invoke(
         self,
         query: str,
         k: int,
-        TOOLS: Dict[str, Callable],
     ) -> ToolSearchResult:
         """
-        Search for relevant tools and resolve their
-        corresponding Python callables.
+        Search for relevant tools and resolve their executors.
         """
 
         tools = self.search_tools(
@@ -239,14 +241,13 @@ class ToolSearchModule:
             k=k,
         )
 
-        tools_callable = self.get_callable_dict(
-            TOOLS=TOOLS,
+        tool_executors = self.get_tool_executors(
             result_search_tools=tools,
         )
 
         return ToolSearchResult(
             tools=tools,
-            tools_callable=tools_callable,
+            tool_executors=tool_executors,
         )
 
     def close(self) -> None:
@@ -255,22 +256,26 @@ class ToolSearchModule:
         self.db.close()
 
 if __name__ == "__main__":
-    from src.tools.tool_implementation import TOOLS
-    from src.tools.tool_ingestion import TOOLS_DEFINTION
-
+    from src.tools.tool_definitions import TOOL_DEFINITIONS
     tool_search = ToolSearchModule(
         db_path="tools.db",
     )
 
-    for tool in TOOLS_DEFINTION:
+    for tool in TOOL_DEFINITIONS:
         tool_search.add_tool(tool)
-        print(f"Added tool to db: {tool["name"]}")
+        print(f"Tool {tool["name"]} added")
 
     result = tool_search.invoke(
-        query="Get me employees having salary > 30000 in engineering department.",
+        query="Get me employees from the engineering department.",
         k=3,
-        TOOLS=TOOLS,
     )
 
-    print(result.tools)
-    print(result.tools_callable)
+    print("Tools:")
+    for tool in result.tools:
+        print(tool)
+
+    print("\nTool Executors:")
+    for name, executor in result.tool_executors.items():
+        print(f"{name}: {type(executor).__name__}")
+
+    tool_search.close()

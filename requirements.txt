@@ -3,3 +3,4 @@ rich
 dotenv
 numpy
 sentence_transformers
+mcp[cli]
