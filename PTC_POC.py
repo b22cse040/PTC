@@ -39,11 +39,10 @@ async def main():
 
 
     ## Query
-
     query = (
-        "Find employees in the Engineering department "
-        "whose salary is greater than 30000. Then retrieve "
-        "the attendance data for each matching employee."
+        "For every employee in the Engineering department, "
+        "get their attendance statistics and report their name, "
+        "attendance rate, days present, and days absent."
     )
 
     print("\nQuery:")
