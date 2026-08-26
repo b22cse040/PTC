@@ -67,7 +67,7 @@ async def main():
 
     ## Create PTC Implementation
 
-    ptc = PTCAnthropic(client=client, model=MODEL)
+    ptc = PTCAnthropic(client=client, model=MODEL, truncate_data=False)
 
     print("\nCreated PTC Module")
 

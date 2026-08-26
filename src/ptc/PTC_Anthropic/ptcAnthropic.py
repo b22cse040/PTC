@@ -13,25 +13,27 @@ load_dotenv(".env")
 
 class PTCAnthropic(PTCModule):
 
-    def __init__(self, client: Anthropic, model: str, max_tokens: int = 4000):
+    def __init__(self, client: Anthropic, model: str, max_tokens: int = 4000, truncate_data: bool = False):
         super().__init__(model=model, max_tokens=max_tokens)
 
         self.client = client
+        self.truncate_data = truncate_data
 
     def _initialize_messages(self, user_message: str) -> List[Any]:
 
         messages = []
 
-        if self.truncate_data:
-            messages.append({
-                "role": "system",
-                "content": (
-                    "When inspecting tool results or datasets, "
-                    "only peek at the data needed to answer the "
-                    "user's query. Do not return or process the "
-                    "entire dataset unless explicitly requested."
-                ),
-            })
+        # if self.truncate_data:
+        #     messages.append({
+        #         # "role": "system",
+        #         # "content": (
+        #         #     "When inspecting tool results or datasets, "
+        #         #     "only peek at the data needed to answer the "
+        #         #     "user's query. Do not return or process the "
+        #         #     "entire dataset unless explicitly requested."
+        #         # ),
+           
+        #     })
 
         messages.append({
             "role": "user",
@@ -51,6 +53,14 @@ class PTCAnthropic(PTCModule):
             "tools": tools,
             "messages": messages,
         }
+
+        if self.truncate_data:
+            SYSTEM_PROMPT = ("When inspecting tool results or datasets, "
+            "only peek at the data needed to answer the "
+            "user's query. Do not return or process the "
+            "entire dataset unless explicitly requested.")
+
+            request_params["system"] = SYSTEM_PROMPT
 
         container_id = state.get("container_id")
 
