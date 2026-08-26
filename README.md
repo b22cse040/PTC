@@ -595,11 +595,8 @@ The architecture allows another provider to be added later without changing the 
 
 This is currently a POC and intentionally keeps several components simple:
 
-* Vector search currently performs brute-force similarity search over stored embeddings.
 * Tool arguments are expected to be JSON-compatible values.
 * Complex Python type deserialization is not currently implemented.
-* The PTC execution loop has a fixed maximum of 10 turns.
-* Tool retrieval quality depends on the embedding model and tool descriptions.
 * The current MCP integration uses stdio transport.
 * The PTC layer currently performs synchronous Anthropic API calls while MCP tool execution is asynchronous.
 
