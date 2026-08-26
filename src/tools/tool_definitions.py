@@ -8,6 +8,32 @@ TOOL_DEFINITIONS = [
             "properties": {},
             "required": [],
         },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                    },
+                    "name": {
+                        "type": "string",
+                    },
+                    "department": {
+                        "type": "string",
+                    },
+                    "salary": {
+                        "type": "number",
+                    },
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "department",
+                    "salary",
+                ],
+            },
+        },
         "input_example": {},
     },
     {
@@ -24,6 +50,32 @@ TOOL_DEFINITIONS = [
             },
             "required": ["department"],
         },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                    },
+                    "name": {
+                        "type": "string",
+                    },
+                    "department": {
+                        "type": "string",
+                    },
+                    "salary": {
+                        "type": "number",
+                    },
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "department",
+                    "salary",
+                ],
+            },
+        },
         "input_example": {
             "department": "Engineering",
         },
@@ -37,6 +89,24 @@ TOOL_DEFINITIONS = [
             "properties": {},
             "required": [],
         },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                    },
+                    "department": {
+                        "type": "string",
+                    },
+                },
+                "required": [
+                    "name",
+                    "department",
+                ],
+            },
+        },
         "input_example": {},
     },
     {
@@ -47,6 +117,24 @@ TOOL_DEFINITIONS = [
             "type": "object",
             "properties": {},
             "required": [],
+        },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                    },
+                    "salary": {
+                        "type": "number",
+                    },
+                },
+                "required": [
+                    "name",
+                    "salary",
+                ],
+            },
         },
         "input_example": {},
     },
@@ -63,6 +151,29 @@ TOOL_DEFINITIONS = [
                 }
             },
             "required": ["employee_id"],
+        },
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "integer",
+                },
+                "health_insurance": {
+                    "type": "boolean",
+                },
+                "paid_leave_days": {
+                    "type": "integer",
+                },
+                "retirement_contribution": {
+                    "type": "number",
+                },
+            },
+            "required": [
+                "employee_id",
+                "health_insurance",
+                "paid_leave_days",
+                "retirement_contribution",
+            ],
         },
         "input_example": {
             "employee_id": 1,
@@ -84,7 +195,14 @@ TOOL_DEFINITIONS = [
                     "description": "Employee performance score.",
                 },
             },
-            "required": ["employee_id", "performance_score"],
+            "required": [
+                "employee_id",
+                "performance_score",
+            ],
+        },
+        "output_schema": {
+            "type": "number",
+            "description": "The calculated annual employee bonus.",
         },
         "input_example": {
             "employee_id": 1,
@@ -105,6 +223,13 @@ TOOL_DEFINITIONS = [
             },
             "required": ["year"],
         },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "string",
+            },
+            "description": "List of company holiday dates.",
+        },
         "input_example": {
             "year": 2026,
         },
@@ -122,6 +247,29 @@ TOOL_DEFINITIONS = [
                 }
             },
             "required": ["employee_id"],
+        },
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "integer",
+                },
+                "days_present": {
+                    "type": "integer",
+                },
+                "days_absent": {
+                    "type": "integer",
+                },
+                "attendance_rate": {
+                    "type": "number",
+                },
+            },
+            "required": [
+                "employee_id",
+                "days_present",
+                "days_absent",
+                "attendance_rate",
+            ],
         },
         "input_example": {
             "employee_id": 1,
@@ -141,6 +289,24 @@ TOOL_DEFINITIONS = [
             },
             "required": ["employee_id"],
         },
+        "output_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "project_id": {
+                        "type": "integer",
+                    },
+                    "project_name": {
+                        "type": "string",
+                    },
+                },
+                "required": [
+                    "project_id",
+                    "project_name",
+                ],
+            },
+        },
         "input_example": {
             "employee_id": 1,
         },
@@ -158,6 +324,25 @@ TOOL_DEFINITIONS = [
                 }
             },
             "required": ["project_id"],
+        },
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "project_id": {
+                    "type": "integer",
+                },
+                "status": {
+                    "type": "string",
+                },
+                "completion_percentage": {
+                    "type": "number",
+                },
+            },
+            "required": [
+                "project_id",
+                "status",
+                "completion_percentage",
+            ],
         },
         "input_example": {
             "project_id": 101,

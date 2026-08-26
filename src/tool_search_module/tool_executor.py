@@ -34,4 +34,6 @@ class MCPToolExecutor(ToolExecutor):
         mcp_client,
         **args
         ) -> Any:
-        return await mcp_client.call_tool(self.name, args)
+        result = await mcp_client.call_tool(self.name, args)
+        ## return str(result)
+        return result.structured_content["result"]

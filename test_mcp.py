@@ -31,6 +31,22 @@ async def main():
             for tool in tools.tools:
                 print(f"- {tool.name}")
 
+            # Execute an MCP tool
+            print("\nExecuting get_employee_attendance...")
+
+            result = await session.call_tool(
+                "get_employee_attendance",
+                {
+                    "employee_id": 1,
+                },
+            )
+
+            print("\nTool result:")
+            print(result)
+
+            print("\nStructured content:")
+            print(result.structured_content)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

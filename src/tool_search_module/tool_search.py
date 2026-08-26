@@ -39,6 +39,7 @@ class ToolSearchModule:
                 description TEXT NOT NULL,
                 source TEXT NOT NULL,
                 input_schema TEXT NOT NULL,
+                output_schema TEXT NOT NULL,
                 input_example TEXT NOT NULL
             )
             """
@@ -102,15 +103,17 @@ class ToolSearchModule:
                 description,
                 source,
                 input_schema,
+                output_schema,
                 input_example
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 name,
                 description,
                 tool["source"],
                 json.dumps(tool["input-schema"]),
+                json.dumps(tool["output_schema"]),
                 json.dumps(tool["input_example"]),
             ),
         )
@@ -158,6 +161,7 @@ class ToolSearchModule:
                 t.description,
                 t.source,
                 t.input_schema,
+                t.output_schema,
                 t.input_example,
                 e.embedding
             FROM tools t
@@ -174,21 +178,30 @@ class ToolSearchModule:
                 dtype=np.float32,
             )
 
-            # Both embeddings are normalized,
-            # so dot product is cosine similarity.
             score = float(
                 np.dot(query_embedding, embedding)
+            )
+
+            output_schema = json.loads(
+                row["output_schema"]
+            )
+
+            enriched_description = (
+                f"{row['description']}\n\n"
+                f"Output schema:\n"
+                f"{json.dumps(output_schema, indent=2)}"
             )
 
             results.append(
                 {
                     "tool_id": row["id"],
                     "name": row["name"],
-                    "description": row["description"],
+                    "description": enriched_description,
                     "source": row["source"],
                     "input_schema": json.loads(
                         row["input_schema"]
                     ),
+                    "output_schema": output_schema,
                     "input_example": json.loads(
                         row["input_example"]
                     ),
@@ -207,10 +220,6 @@ class ToolSearchModule:
         self,
         result_search_tools: List[Dict[str, Any]],
     ) -> Dict[str, ToolExecutor]:
-        """
-        Filter the globally maintained TOOL_EXECUTORS registry
-        using the tools returned by semantic search.
-        """
 
         tool_executors: Dict[str, ToolExecutor] = {}
 
@@ -223,7 +232,9 @@ class ToolSearchModule:
                     f"but is missing from TOOL_EXECUTORS."
                 )
 
-            tool_executors[tool_name] = TOOL_EXECUTORS[tool_name]
+            tool_executors[tool_name] = (
+                TOOL_EXECUTORS[tool_name]
+            )
 
         return tool_executors
 
@@ -232,9 +243,6 @@ class ToolSearchModule:
         query: str,
         k: int,
     ) -> ToolSearchResult:
-        """
-        Search for relevant tools and resolve their executors.
-        """
 
         tools = self.search_tools(
             query=query,
@@ -251,8 +259,6 @@ class ToolSearchModule:
         )
 
     def close(self) -> None:
-        """Close the database connection."""
-
         self.db.close()
 
 if __name__ == "__main__":
