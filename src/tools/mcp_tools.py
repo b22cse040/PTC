@@ -76,3 +76,6 @@ def get_project_status(project_id: int) -> Dict[str, Any]:
         )
 
     return PROJECT_STATUS[project_id]
+
+if __name__ == "__main__":
+    mcp.run()

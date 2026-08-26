@@ -1,9 +1,12 @@
-import stat
 import copy, json, time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
+from src.tool_search_module.tool_executor import (
+    MCPToolExecutor,
+    ToolExecutor,
+)
 from src.tool_search_module.tool_search import ToolSearchResult
 
 TURNS_LEFT = 10
@@ -32,10 +35,11 @@ class PTCModule(ABC):
         self.max_tokens = max_tokens 
         self.truncate_data: bool = truncate_data ## If true, a system prompt must be added to Indicate only peek the data.
 
-    def invoke(
+    async def invoke(
         self,
         user_message: str,
-        tool_search_result: ToolSearchResult
+        tool_search_result: ToolSearchResult,
+        mcp_client: Any = None,
         ) -> PTCResult:
 
         """
@@ -73,11 +77,12 @@ class PTCModule(ABC):
 
             self._update_state(response=response, state=state)
 
-            result_type = self._process_response(
+            result_type = await self._process_response(
                     response=response,
                     messages=messages,
                     result=tool_search_result,
                     state=state,
+                    mcp_client=mcp_client
                 )
 
             if result_type.finished:
@@ -141,29 +146,40 @@ class PTCModule(ABC):
         return str(result)
 
     @staticmethod
-    def _execute_tool(
+    async def _execute_tool(
         tool_name: str,
         tool_input: Dict[str, Any],
-        tools_callable: Dict[str, Callable]
+        tool_executors: Dict[str, ToolExecutor],
+        mcp_client: Any = None
     ) -> str:
         """
-        Resolve and execute a retrieved Python Callable.
+        Resolve and execute a retrieved ToolExecutor.
 
-        Note: Extend this fn to resolve parameters as right now all the tools
-        have configured params to string, but there will be cases where fn requires
-        class objects eg. Employee e. for this, we need to resolve parameters
-        before calling the fn.
+        Native tools execute through their wrapped callable while
+        MCP tools execute through the supplied MCP client.
         """
 
-        if tool_name not in tools_callable:
+        if tool_name not in tool_executors:
             raise KeyError(
                 f"Tool '{tool_name}' was requested by the "
                 f"model but was not present in the retrieved "
-                f"callable dictionary."
+                f"tool executor dictionary."
             )
 
-        tool_callable = tools_callable[tool_name]
-        result = tool_callable(**tool_input)
+        tool_executor = tool_executors[tool_name]
+
+        if isinstance(tool_executor, MCPToolExecutor):
+            if mcp_client is None:
+                raise ValueError(
+                    f"MCP client is required to execute "
+                    f"MCP Tool '{tool_name}'"
+
+                )
+
+            result = await tool_executor.execute(mcp_client=mcp_client, **tool_input)
+
+        else:
+            result = await tool_executor.execute(**tool_input)
 
         return PTCModule._format_tool_result(result)
 
@@ -221,12 +237,13 @@ class PTCModule(ABC):
         pass
 
     @abstractmethod
-    def _process_response(
+    async def _process_response(
         self,
         response: Any,
         messages: List[Any],
         result: ToolSearchResult,
         state: Dict[str, Any],
+        mcp_client: Any
     ) -> "PTCResponseState":
         """
         Process a provider response.
