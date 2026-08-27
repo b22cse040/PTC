@@ -91,7 +91,7 @@ Each tool is represented using metadata such as:
     "name": "get_employees_by_department",
     "description": "Return employees belonging to a specified department.",
     "source": "native",
-    "input-schema": {...},
+    "input_schema": {...},
     "input_example": {...}
 }
 ```

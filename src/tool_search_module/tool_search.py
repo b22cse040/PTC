@@ -112,7 +112,7 @@ class ToolSearchModule:
                 name,
                 description,
                 tool["source"],
-                json.dumps(tool["input-schema"]),
+                json.dumps(tool["input_schema"]),
                 json.dumps(tool["output_schema"]),
                 json.dumps(tool["input_example"]),
             ),

@@ -3,7 +3,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employees",
         "description": "Return the complete list of employees.",
         "source": "native",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {},
             "required": [],
@@ -40,7 +40,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employees_by_department",
         "description": "Return employees belonging to a specified department.",
         "source": "native",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "department": {
@@ -84,7 +84,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employee_department",
         "description": "Return the name and department of every employee.",
         "source": "native",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {},
             "required": [],
@@ -113,7 +113,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employee_salary",
         "description": "Return the name and salary of every employee.",
         "source": "native",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {},
             "required": [],
@@ -142,7 +142,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employee_benefits",
         "description": "Return benefits information associated with a specific employee.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -183,7 +183,7 @@ TOOL_DEFINITIONS = [
         "name": "calculate_employee_bonus",
         "description": "Calculate an employee's annual bonus using their performance score.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -213,7 +213,7 @@ TOOL_DEFINITIONS = [
         "name": "get_company_holidays",
         "description": "Return the company's holidays for a specified year.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "year": {
@@ -238,7 +238,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employee_attendance",
         "description": "Return attendance statistics for a specific employee.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -279,7 +279,7 @@ TOOL_DEFINITIONS = [
         "name": "get_employee_projects",
         "description": "Return projects currently assigned to a specific employee.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "employee_id": {
@@ -315,7 +315,7 @@ TOOL_DEFINITIONS = [
         "name": "get_project_status",
         "description": "Return the current status and completion percentage of a project.",
         "source": "mcp",
-        "input-schema": {
+        "input_schema": {
             "type": "object",
             "properties": {
                 "project_id": {

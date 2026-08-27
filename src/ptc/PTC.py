@@ -113,20 +113,7 @@ class PTCModule(ABC):
         """
         Build the tool list that will be exposed to the underlying PTC implementation.
         """
-
-        tools = copy.deepcopy(result.tools)
-
-        for tool in tools:
-            tool["allowed_callers"] = ["code_execution_20260120"]
-
-        tools.append(
-            {
-                "type" : "code_execution_20260120",
-                "name" : "code_execution"
-            }    
-        )
-
-        return tools
+        pass
 
     @staticmethod
     def _format_tool_result(

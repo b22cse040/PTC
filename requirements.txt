@@ -1,6 +1,6 @@
 anthropic
-rich
 dotenv
-numpy
-sentence_transformers
 mcp[cli]
+numpy
+openai
+sentence_transformers
