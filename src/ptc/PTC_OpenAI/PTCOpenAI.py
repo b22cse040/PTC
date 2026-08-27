@@ -90,7 +90,7 @@ class PTCOpenAI(PTCModule):
                 print(f"[PTC DirectTool called by model: {tool_name}")
 
             content = await self._execute_tool(
-                tool=tool_name,
+                tool_name=tool_name,
                 tool_input=tool_input,
                 tool_executors=result.tool_executors,
                 mcp_client=mcp_client,
