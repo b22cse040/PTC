@@ -36,7 +36,7 @@ async def main():
 
     ## OpenAI
     client = OpenAI(api_key=api_key)
-    MODEL = "gpt-5.6-terra"
+    MODEL = "gpt-5.6-sol"
     print(f"Model: {MODEL}")
 
 
