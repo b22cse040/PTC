@@ -70,8 +70,13 @@ class PTCAnthropic(PTCModule):
             extra_body={"container": container_id} if container_id else None,
         )
 
-    def _get_token_usage(self, response: Any) -> int:
-        return response.usage.input_tokens + response.usage.output_tokens
+    def _get_token_usage(self, response: Any) -> Dict[str, int]:
+        ## return response.usage.input_tokens + response.usage.output_tokens
+        return {
+            "input-tokens" : response.usage.input_tokens,
+            "output-tokens" : response.usage.output_tokens,
+            "total-tokens" : response.usage.input_tokens + response.usage.output_tokens
+        }
 
     def _update_state(self, response: Any, state: Dict[str, Any]) -> None:
 

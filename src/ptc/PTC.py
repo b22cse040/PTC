@@ -15,7 +15,7 @@ TURNS_LEFT = 10
 class PTCResult:
     response : Optional[str]
     messages : List[Any]
-    total_tokens : int
+    tokens_usage : Dict[str, int]
     elapsed_time : float
     api_count : int 
 
@@ -54,7 +54,11 @@ class PTCModule(ABC):
             user_message
         )
 
-        total_tokens = 0
+        total_tokens_usage = {
+            "input-tokens" : 0,
+            "output-tokens" : 0,
+            "total-tokens" : 0
+        }
         api_count = 0
         start_time = time.time()
 
@@ -73,7 +77,10 @@ class PTCModule(ABC):
 
             api_count += 1
 
-            total_tokens += self._get_token_usage(response)
+            # total_tokens += self._get_token_usage(response)
+            tokens_usage_this_round = self._get_token_usage(response)
+            for key, val in tokens_usage_this_round.items():
+                total_tokens_usage[key] += val
 
             self._update_state(response=response, state=state)
 
@@ -91,7 +98,7 @@ class PTCModule(ABC):
                 return PTCResult(
                     response = result_type.response,
                     messages=messages,
-                    total_tokens = total_tokens,
+                    tokens_usage = total_tokens_usage,
                     elapsed_time=elapsed_time,
                     api_count=api_count
                 )
@@ -101,7 +108,7 @@ class PTCModule(ABC):
         return PTCResult(
             response="Max number of PTC Turns reached",
             messages=messages,
-            total_tokens=total_tokens,
+            tokens_usage=total_tokens_usage,
             elapsed_time=elapsed_time,
             api_count=api_count
         )
@@ -203,7 +210,7 @@ class PTCModule(ABC):
     def _get_token_usage(
         self,
         response: Any,
-    ) -> int:
+    ) -> Dict[str, int]:
         """
         Extract token usage from the provider response.
         """

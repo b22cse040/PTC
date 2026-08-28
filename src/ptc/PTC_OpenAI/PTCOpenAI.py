@@ -39,11 +39,20 @@ class PTCOpenAI(PTCModule):
 
         return self.client.responses.create(**request_params)
 
-    def _get_token_usage(self, response: Any) -> int:
+    def _get_token_usage(self, response: Any) -> Dict[str, int]:
         if response.usage is None:
-            return 0
+            return {
+                "input-tokens" : 0,
+                "output-tokens" : 0,
+                "total-tokens" : 0
+            }
 
-        return response.usage.input_tokens + response.usage.output_tokens
+        ## return response.usage.input_tokens + response.usage.output_tokens
+        return {
+            "input-tokens" : response.usage.input_tokens,
+            "output-tokens" : response.usage.output_tokens,
+            "total-tokens" : response.usage.input_tokens + response.usage.output_tokens
+        }
 
     def _update_state(self, response: Any, state: Dict[str, Any]) -> None:
         ## openAI PTC does not require provider-side state here because we use

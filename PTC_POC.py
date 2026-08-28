@@ -4,15 +4,14 @@ from pprint import pprint
 from dotenv import load_dotenv
 
 # from anthropic import Anthropic
-
 from openai import OpenAI
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 # from src.ptc.PTC_Anthropic.ptcAnthropic import PTCAnthropic
-
 from src.ptc.PTC_OpenAI.PTCOpenAI import PTCOpenAI
+
 from src.tool_search_module.tool_search import ToolSearchModule
 from src.tools.tool_definitions import TOOL_DEFINITIONS
 
@@ -71,8 +70,7 @@ async def main():
         print(f"{name:<35} {type(executor).__name__}")
 
 
-    ## Create PTC Implementation
-    # Anthropic
+    ## Create PTC Implementation Anthropic
     # ptc = PTCAnthropic(client=client, model=MODEL, truncate_data=True)
 
     # OpenAI
@@ -110,7 +108,9 @@ async def main():
     print("\nResponse:")
     print(result.response)
     print("\nTotal tokens:")
-    print(result.total_tokens)
+    # print(result.tokens_usage)
+    for key, val in result.tokens_usage.items():
+        print(f"{key} : {val}")
     print("\nAPI calls:")
     print(result.api_count)
     print("\nElapsed time:")
