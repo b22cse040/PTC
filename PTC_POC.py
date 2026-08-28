@@ -9,8 +9,8 @@ from openai import OpenAI
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# from src.ptc.PTC_Anthropic.ptcAnthropic import PTCAnthropic
-from src.ptc.PTC_OpenAI.PTCOpenAI import PTCOpenAI
+# from src.ptc.ptc_anthropic.ptcAnthropic import PTCAnthropic
+from src.ptc.ptc_openai.PTCOpenAI import PTCOpenAI
 
 from src.tool_search_module.tool_search import ToolSearchModule
 from src.tools.tool_definitions import TOOL_DEFINITIONS
