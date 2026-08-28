@@ -20,7 +20,7 @@ class ToolSearchModule:
     def __init__(
         self,
         db_path: str,
-        model_name: str = "answerdotai/ModernBERT-base",
+        model_name: str = "nomic-ai/modernbert-embed-base",
     ):
         self.db = sqlite3.connect(db_path)
         self.db.row_factory = sqlite3.Row
