@@ -96,13 +96,10 @@ class PTCAnthropic(PTCModule):
 
         if response.stop_reason == "end_turn":
 
-            final_response = next(
-                (
-                    block.text
-                    for block in response.content
-                    if isinstance(block, BetaTextBlock)
-                ),
-                None,
+            final_response = "\n".join(
+                block.text
+                for block in response.content
+                if isinstance(block, BetaTextBlock)
             )
 
             return PTCResponseState(finished=True, response=final_response)

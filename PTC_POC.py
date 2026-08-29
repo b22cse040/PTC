@@ -3,14 +3,14 @@ import os
 from pprint import pprint
 from dotenv import load_dotenv
 
-# from anthropic import Anthropic
-from openai import OpenAI
+from anthropic import Anthropic
+# from openai import OpenAI
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# from src.ptc.ptc_anthropic.ptcAnthropic import PTCAnthropic
-from src.ptc.ptc_openai.ptcOpenAI import PTCOpenAI
+from src.ptc.ptc_anthropic.ptcAnthropic import PTCAnthropic
+# from src.ptc.ptc_openai.ptcOpenAI import PTCOpenAI
 
 from src.tool_search_module.tool_search import ToolSearchModule
 from src.tools.tool_definitions import TOOL_DEFINITIONS
@@ -20,23 +20,23 @@ load_dotenv(".env")
 
 
 # Anthropic
-# api_key = os.getenv("ANTHROPIC_API_KEY")
-# assert api_key is not None
+api_key = os.getenv("ANTHROPIC_API_KEY")
+assert api_key is not None
 
 # OpenAI
-api_key = os.getenv("OPENAI_API_KEY")
-assert api_key is not None
+# api_key = os.getenv("OPENAI_API_KEY")
+# assert api_key is not None
 
 
 async def main():
 
     ## Anthropic
-    # client = Anthropic()
-    # MODEL = "claude-sonnet-4-5"
+    client = Anthropic()
+    MODEL = "claude-sonnet-4-5"
 
     ## OpenAI
-    client = OpenAI(api_key=api_key)
-    MODEL = "gpt-5.6-sol"
+    # client = OpenAI(api_key=api_key)
+    # MODEL = "gpt-5.6-terra"
     print(f"Model: {MODEL}")
 
 
@@ -49,16 +49,21 @@ async def main():
 
     ## Query
     query = (
-        "For every employee in the Engineering department, "
-        "get their attendance statistics and report their name, "
-        "attendance rate, days present, and days absent."
+        "Give me a complete Engineering workforce report. "
+        "First identify all employees in the Engineering department. "
+        "For each Engineering employee, report their salary, attendance statistics, benefits, and current projects. "
+        "For every project they are assigned to, also report the current project status. "
+        "Present the results as a clear, detailed textual report organized by employee. "
+        "For each employee, describe their salary, attendance rate, days present, days absent, "
+        "projects and the status of each project. "
+        "Do not use a table; provide the complete answer in natural language."
     )
     print("\nQuery:")
     print(query)
 
 
     ## Retrieve Relevant Tools
-    search_result = tool_search.invoke(query=query, k=8)
+    search_result = tool_search.invoke(query=query, k=10)
 
     print("\nRetrieved Tools")
     for i, tool in enumerate(search_result.tools, start=1):
@@ -71,10 +76,10 @@ async def main():
 
 
     ## Create PTC Implementation Anthropic
-    # ptc = PTCAnthropic(client=client, model=MODEL, truncate_data=True)
+    ptc = PTCAnthropic(client=client, model=MODEL, truncate_data=True)
 
     # OpenAI
-    ptc = PTCOpenAI(client=client, model=MODEL, truncate_data=True)
+    # ptc = PTCOpenAI(client=client, model=MODEL, truncate_data=True)
     print("\nCreated PTC Module")
 
     ## MCP Client

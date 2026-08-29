@@ -201,8 +201,23 @@ TOOL_DEFINITIONS = [
             ],
         },
         "output_schema": {
-            "type": "number",
-            "description": "The calculated annual employee bonus.",
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "integer",
+                },
+                "performance_score": {
+                    "type": "number",
+                },
+                "bonus": {
+                    "type": "number",
+                },
+            },
+            "required": [
+                "employee_id",
+                "performance_score",
+                "bonus",
+            ],
         },
         "input_example": {
             "employee_id": 1,
@@ -297,13 +312,17 @@ TOOL_DEFINITIONS = [
                     "project_id": {
                         "type": "integer",
                     },
-                    "project_name": {
+                    "name": {
+                        "type": "string",
+                    },
+                    "role": {
                         "type": "string",
                     },
                 },
                 "required": [
                     "project_id",
-                    "project_name",
+                    "name",
+                    "role",
                 ],
             },
         },
@@ -331,6 +350,9 @@ TOOL_DEFINITIONS = [
                 "project_id": {
                     "type": "integer",
                 },
+                "name": {
+                    "type": "string",
+                },
                 "status": {
                     "type": "string",
                 },
@@ -340,12 +362,13 @@ TOOL_DEFINITIONS = [
             },
             "required": [
                 "project_id",
+                "name",
                 "status",
                 "completion_percentage",
             ],
         },
-        "input_example": {
-            "project_id": 101,
-        },
+        "input_example" : {
+            "project_id" : 1
+        }
     },
 ]

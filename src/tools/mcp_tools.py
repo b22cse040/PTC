@@ -51,7 +51,10 @@ def get_employee_attendance(employee_id: int) -> Dict[str, Any]:
             f"No attendance data found for employee {employee_id}"
         )
 
-    return ATTENDANCE_DATA[employee_id]
+    return {
+        "employee_id" : employee_id,
+        **ATTENDANCE_DATA[employee_id]
+    }
 
 
 @mcp.tool()

@@ -34,7 +34,7 @@ class PTCOpenAI(PTCModule):
         if self.truncate_data:
             request_params["instructions"] = (
                 "When inspecting tool results or datasets, only inspect the data needed to answer the "
-                "user's query. Do not return or process the entire dataset unless explicitly requested."
+                "user's query. Do not return or process the entire output unless explicitly requested."
             )
 
         return self.client.responses.create(**request_params)

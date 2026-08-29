@@ -9,7 +9,7 @@ from src.tool_search_module.tool_executor import (
 )
 from src.tool_search_module.tool_search import ToolSearchResult
 
-TURNS_LEFT = 10
+TURNS_LEFT = 25
 
 @dataclass
 class PTCResult:
